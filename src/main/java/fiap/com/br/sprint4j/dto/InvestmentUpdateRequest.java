@@ -1,0 +1,15 @@
+package fiap.com.br.sprint4j.dto;
+
+import java.time.LocalDateTime;
+
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.Size;
+
+public record InvestmentUpdateRequest(
+        @NotBlank @Size(max = 120) String nome,
+        @NotBlank @Size(max = 20) LocalDateTime data,
+        @Positive double valor
+) {
+
+}
