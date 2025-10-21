@@ -8,7 +8,7 @@ import jakarta.validation.constraints.Size;
 
 public record InvestmentCreateRequest(
         @NotBlank @Size(max = 120) String nome,
-        @NotBlank @Size(max = 20) LocalDateTime data,
+        @NotBlank LocalDateTime data,
         @Positive double valor
 ) {
 

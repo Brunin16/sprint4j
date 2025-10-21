@@ -17,7 +17,7 @@ import fiap.com.br.sprint4j.dto.PersonCreateRequest;
 import fiap.com.br.sprint4j.dto.PersonDto;
 import fiap.com.br.sprint4j.dto.PersonUpdateRequest;
 import fiap.com.br.sprint4j.service.PersonService;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
+import org.springframework.web.bind.annotation.RequestBody;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -30,7 +30,8 @@ public class PersonController {
 private final PersonService service;
 
     @PostMapping
-    public ResponseEntity<PersonDto> create(@Valid @RequestBody PersonCreateRequest req) {
+    public ResponseEntity<PersonDto> create(@RequestBody PersonCreateRequest req) {
+        System.out.println(req);
         return ResponseEntity.ok(service.create(req));
     }
 

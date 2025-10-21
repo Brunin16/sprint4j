@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import fiap.com.br.sprint4j.domain.models.User;
 import fiap.com.br.sprint4j.dto.LoginRequest;
 import fiap.com.br.sprint4j.dto.LoginResponse;
 import fiap.com.br.sprint4j.dto.UserCreateRequest;
@@ -30,16 +29,24 @@ public class AuthController {
 
     @PostMapping("/register")
     public ResponseEntity<UserDto> register(@Valid @RequestBody UserCreateRequest req) {
+        System.out.println(req);
         return ResponseEntity.ok(userService.register(req));
     }
 
-    @PostMapping("/login")
-    public ResponseEntity<LoginResponse> login(@Valid @RequestBody LoginRequest req) {
-        var auth = authManager.authenticate(
-                new UsernamePasswordAuthenticationToken(req.username(), req.password())
-        );
-        var principal = (User) auth.getPrincipal();
-        var token = jwt.generateToken(principal);
-        return ResponseEntity.ok(LoginResponse.bearer(token));
-    }
+@PostMapping("/login")
+public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest req) {
+    System.out.println(req);
+    var auth = authManager.authenticate(
+        new UsernamePasswordAuthenticationToken(req.username(), req.password())
+    );
+    System.out.println(req);
+
+    var userDetails = (org.springframework.security.core.userdetails.User) auth.getPrincipal();
+    String username = userDetails.getUsername();
+
+    var domainUser = userService.findByUsernameRaw(username); 
+
+    var token = jwt.generateToken(domainUser.get()); 
+    return ResponseEntity.ok(LoginResponse.bearer(token));
+}
 }

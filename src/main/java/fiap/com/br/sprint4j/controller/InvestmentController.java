@@ -16,7 +16,7 @@ import fiap.com.br.sprint4j.dto.InvestmentCreateRequest;
 import fiap.com.br.sprint4j.dto.InvestmentDto;
 import fiap.com.br.sprint4j.dto.InvestmentUpdateRequest;
 import fiap.com.br.sprint4j.service.InvestmentService;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
+import org.springframework.web.bind.annotation.RequestBody;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -30,7 +30,8 @@ public class InvestmentController {
     private final InvestmentService service;
 
     @PostMapping
-    public ResponseEntity<InvestmentDto> create(@Valid @RequestBody InvestmentCreateRequest req) {
+    public ResponseEntity<InvestmentDto> create(@RequestBody InvestmentCreateRequest req) {
+        System.out.println(req);
         return ResponseEntity.ok(service.create(req));
     }
 

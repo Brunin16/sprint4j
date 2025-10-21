@@ -25,7 +25,7 @@ public class Investment {
     @Column(nullable = false, length = 120)
     private String nome;
 
-    @Column(nullable = false, length = 20)
+    @Column(nullable = false)
     private LocalDateTime data;
 
     @Column(nullable = false)
