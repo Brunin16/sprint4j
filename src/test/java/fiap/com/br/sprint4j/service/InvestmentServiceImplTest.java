@@ -40,11 +40,6 @@ class InvestmentServiceImplTest {
     @Test
     void create_ok() {
         var req = new InvestmentCreateRequest("CDB", LocalDateTime.now(), 500.0);
-        // Se você trocou DTO para LocalDateTime, ajuste aqui para o tipo correto
-        // e os mappers respectivos.
-        // Exemplo alternativo (se DTO usa LocalDateTime):
-        // var req = new InvestmentCreateRequest("CDB", LocalDateTime.now(), 500.0);
-
         when(repository.save(any(Investment.class))).thenAnswer(a -> {
             Investment i = a.getArgument(0);
             i.setId(UUID.randomUUID());
