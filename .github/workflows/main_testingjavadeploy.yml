@@ -37,27 +37,43 @@ jobs:
     runs-on: ubuntu-latest
     needs: build
     permissions:
-      id-token: write #This is required for requesting the JWT
-      contents: read #This is required for actions/checkout
-  
-    steps:
-      - name: Download artifact from build job
-        uses: actions/download-artifact@v4
-        with:
-          name: java-app
-      
-      - name: Login to Azure
-        uses: azure/login@v2
-        with:
-          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_9A7228DD83ED480ABD9B53297F064ED2 }}
-          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_9B089D5FDEDA4583895896194FB83DF1 }}
-          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_61F44FA3C33A4CF8846EF478E58895A0 }}
+      id-token: write
+      contents: read
 
-      - name: Deploy to Azure Web App
-        id: deploy-to-webapp
-        uses: azure/webapps-deploy@v3
-        with:
-          app-name: 'TestingJavaDeploy'
-          slot-name: 'Production'
-          package: '*.jar'
+    steps:
+    - name: Download artifact from build job
+      uses: actions/download-artifact@v4
+      with:
+        name: java-app
+
+    - name: Show downloaded files (debug)
+      run: |
+        echo "PWD: $(pwd)"
+        ls -la
+        find . -name "*.jar" -print
+
+    - name: Move jar to predictable name
+      run: |
+        # assume artifact was downloaded into ./java-app
+        JAR=$(find . -name "*.jar" | head -n 1)
+        echo "Found jar: $JAR"
+        mv "$JAR" app.jar
+        ls -la
+
+    - name: Login to Azure
+      uses: azure/login@v2
+      with:
+        client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_9A7228DD83ED480ABD9B53297F064ED2 }}
+        tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_9B089D5FDEDA4583895896194FB83DF1 }}
+        subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_61F44FA3C33A4CF8846EF478E58895A0 }}
+
+    - name: Deploy to Azure Web App
+      id: deploy-to-webapp
+      uses: azure/webapps-deploy@v3
+      with:
+        app-name: 'TestingJavaDeploy'
+        slot-name: 'Production'
+        package: './app.jar'
+
+
           
